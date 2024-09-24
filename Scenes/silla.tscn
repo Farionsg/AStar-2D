@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://cmqcyftel44b0"]
+
+[ext_resource type="Texture2D" uid="uid://drani2vys58ln" path="res://Assets/Tilemap/CoolSchool_tileset.png" id="1_gvdtq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c168w"]
+size = Vector2(26, 47)
+
+[node name="Silla" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_gvdtq")
+region_enabled = true
+region_rect = Rect2(10.3063, 431.597, 27.7484, 49.5872)
+
+[node name="Area2D" type="Area2D" parent="Sprite2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2D"]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_c168w")
