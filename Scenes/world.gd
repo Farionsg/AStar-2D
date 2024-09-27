@@ -1,22 +1,23 @@
 extends Node2D
 
-const MAP_WIDTH = 50
+# Estas variables se usaran para modificar el mundo a nuestro gusto
+const MAP_WIDTH = 50		# De que size queremos el mundo
 const MAP_HEIGHT = 50
-const ROOM_MIN_SIZE = 8
-const ROOM_MAX_SIZE = 12
+const ROOM_MIN_SIZE = 8     # Como queremos los cuartos dentro del mundo
+const ROOM_MAX_SIZE = 12    # Cuartos mas chiquitos implican mas cuartos
 
 @onready var tilemap = $TileMap
 @onready var player = $CharacterBody2D
-
 var astar: AStar2D = AStar2D.new()
-
 var SillaScene = load("res://Scenes/silla.tscn")
 var PupitreScene = load("res://Scenes/pupitre.tscn")
 var LibroScene = load("res://Scenes/libro.tscn")
 
+# Estas son el indice de la textura que queremos usar para el tilemap
 const TILE_FLOOR = 2
 const TILE_WALL = 3
 
+# Guarda el mapa en arreglos
 var rooms = []
 var corridors = []
 var libro_position = Vector2.ZERO
@@ -52,26 +53,26 @@ func spawn_book_in_random_room():
 		libro_instance.position = tilemap.map_to_local(Vector2(book_x, book_y))
 		add_child(libro_instance)
 
-# AStar configuration, solo movimientos cardinales
+# AStar configuration, solo movimientos cardinales osea sin diagonales
 func generate_astar_graph():
-	# Generar el grafo de navegación AStar usando el mapa
-	astar.clear()
+	## -----------------------¿COMO FUNCIONA EL ASTAR?---------------------------
+	astar.clear() # Primero limpiamos cualquier cosa que pueda molestar
 	for x in range(MAP_WIDTH):
-		for y in range(MAP_HEIGHT):
-			var tile_type = tilemap.get_cell_source_id(Vector2(x, y))
-			if tile_type == TILE_FLOOR:
-				var id = x + y * MAP_WIDTH
-				astar.add_point(id, Vector2(x, y))
-				
+		for y in range(MAP_HEIGHT): # Le damos el rango del mapa que va a buscar
+			var tile_type = tilemap.get_cell_source_id(Vector2(x, y)) # Esto es para saber que tile es piso
+			if tile_type == TILE_FLOOR:								  # Y CUAL ES PARED
+				var id = x + y * MAP_WIDTH   		 # Como si es piso entonces entra y
+				astar.add_point(id, Vector2(x, y))	 # Se crea una id de la tile para agregarla al path			
 				# Conectar solo con los puntos vecinos en las direcciones cardinales
-				for dir in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
-					var neighbor_x = x + dir.x
-					var neighbor_y = y + dir.y
-					if neighbor_x >= 0 and neighbor_x < MAP_WIDTH and neighbor_y >= 0 and neighbor_y < MAP_HEIGHT:
-						var neighbor_tile = tilemap.get_cell_source_id(Vector2(neighbor_x, neighbor_y))
+				for dir in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]: # Esto de vector es para no dar diagonales
+					var neighbor_x = x + dir.x	# Define las direcciones de los vecinos arriba y al lado
+					var neighbor_y = y + dir.y  # Para saber si son piso y poder agregarlo al mapa
+					if neighbor_x >= 0 and neighbor_x < MAP_WIDTH and neighbor_y >= 0 and neighbor_y < MAP_HEIGHT: # QUE NO SE SALGA DEL MAPA
+						var neighbor_tile = tilemap.get_cell_source_id(Vector2(neighbor_x, neighbor_y)) # Hace lo mismo de saber si es piso o pared
 						if neighbor_tile == TILE_FLOOR:
 							var neighbor_id = neighbor_x + neighbor_y * MAP_WIDTH
-							astar.connect_points(id, neighbor_id)
+							astar.connect_points(id, neighbor_id)  # Si es piso lo conecta mucho gusto
+	## ------AHORA TENEMOS TODO EL MAPA EN NODOS -> player.gd move_to_book() PARA SABER COMO HACE EL PATH-----------------
 
 # Devuelve un cuarto aleatorio
 func get_random_room():
