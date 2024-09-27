@@ -1,36 +1,83 @@
 extends Node2D
 
-# Tamaño de la cuadrícula y cuartos
 const MAP_WIDTH = 50
 const MAP_HEIGHT = 50
 const ROOM_MIN_SIZE = 8
 const ROOM_MAX_SIZE = 12
 
-# Referencia al TileMap
-@onready var tilemap = $TileMap  # Asume que tienes un nodo TileMap en tu escena
+@onready var tilemap = $TileMap
+@onready var player = $CharacterBody2D
+
+var astar: AStar2D = AStar2D.new()
 
 var SillaScene = load("res://Scenes/silla.tscn")
 var PupitreScene = load("res://Scenes/pupitre.tscn")
+var LibroScene = load("res://Scenes/libro.tscn")
 
-# IDs de tiles en el TileSet
 const TILE_FLOOR = 2
-const TILE_WALL = 2
+const TILE_WALL = 3
 
 var rooms = []
 var corridors = []
+var libro_position = Vector2.ZERO
 
 func _ready():
 	generate_map()
+	generate_astar_graph()
+	spawn_book_in_random_room()
+	player.move_to_book()
 
 func generate_map():
-	for i in range(20):  # Generar 10 cuartos como ejemplo
+	# Generar cuartos y pasillos
+	for i in range(20):  
 		var room = generate_random_room()
 		if can_place_room(room):
 			rooms.append(room)
 			place_room(room)
 			place_random_objects(room)
-	
 	connect_rooms()
+	
+	# Spawn del jugador en un cuarto aleatorio
+	var random_room = get_random_room()
+	if random_room:
+		player.global_position = tilemap.map_to_local(Vector2(random_room.position.x + 1, random_room.position.y + 1))
+
+func spawn_book_in_random_room():
+	var random_room = get_random_room()
+	if random_room:
+		var libro_instance = LibroScene.instantiate()
+		var book_x = randi_range(random_room.position.x, random_room.position.x + random_room.size.x - 1)
+		var book_y = randi_range(random_room.position.y, random_room.position.y + random_room.size.y - 1)
+		libro_position = Vector2(book_x, book_y)
+		libro_instance.position = tilemap.map_to_local(Vector2(book_x, book_y))
+		add_child(libro_instance)
+
+# AStar configuration, solo movimientos cardinales
+func generate_astar_graph():
+	# Generar el grafo de navegación AStar usando el mapa
+	astar.clear()
+	for x in range(MAP_WIDTH):
+		for y in range(MAP_HEIGHT):
+			var tile_type = tilemap.get_cell_source_id(Vector2(x, y))
+			if tile_type == TILE_FLOOR:
+				var id = x + y * MAP_WIDTH
+				astar.add_point(id, Vector2(x, y))
+				
+				# Conectar solo con los puntos vecinos en las direcciones cardinales
+				for dir in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
+					var neighbor_x = x + dir.x
+					var neighbor_y = y + dir.y
+					if neighbor_x >= 0 and neighbor_x < MAP_WIDTH and neighbor_y >= 0 and neighbor_y < MAP_HEIGHT:
+						var neighbor_tile = tilemap.get_cell_source_id(Vector2(neighbor_x, neighbor_y))
+						if neighbor_tile == TILE_FLOOR:
+							var neighbor_id = neighbor_x + neighbor_y * MAP_WIDTH
+							astar.connect_points(id, neighbor_id)
+
+# Devuelve un cuarto aleatorio
+func get_random_room():
+	if rooms.size() > 0:
+		return rooms[randi() % rooms.size()]
+	return null
 
 func generate_random_room():
 	var room_size_x = randi_range(ROOM_MIN_SIZE, ROOM_MAX_SIZE)
@@ -89,7 +136,7 @@ func create_corridor(room_a, room_b):
 				tilemap.set_cell(Vector2i(x, start.y), TILE_FLOOR, Vector2i(2,0))
 				
 func place_random_objects(room):
-	var num_objects = randi_range(1, 5)  # Número aleatorio de objetos entre 1 y 5
+	var num_objects = randi_range(1, 10)  # Número aleatorio de objetos entre 1 y 5
 	
 	for i in range(num_objects):
 		# Seleccionar un objeto aleatorio

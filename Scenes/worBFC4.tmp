@@ -9,11 +9,10 @@
 script = ExtResource("1_mldty")
 
 [node name="TileMap" parent="." instance=ExtResource("2_4nm8w")]
-unique_name_in_owner = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(972, 1079)
-zoom = Vector2(0.8, 0.8)
+zoom = Vector2(0.5, 0.5)
 script = ExtResource("3_aublt")
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("4_ou168")]
