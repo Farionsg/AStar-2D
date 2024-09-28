@@ -8,10 +8,13 @@ extends CharacterBody2D
 @onready var down_cost_label = $Camera2D/DownCostLabel
 @onready var left_cost_label = $Camera2D/LeftCostLabel
 @onready var right_cost_label = $Camera2D/RightCostLabel
+@onready var heuristic_label = $Camera2D/HeuristicLabel
+@onready var total_h = $Camera2D/TotalH
 # Velocidad del jugador
-@export var speed := 200.0
+@export var speed := 150.0
 
 var total_cost = 0.0
+var total_heuristic = 0.0
 
 var idle = 0 # La use para saber en que direccion poner la idle animation
 var ejeX = 0
@@ -23,6 +26,7 @@ var current_target_index = 0
 
 func _ready():
 	total_cost = 0.0
+	total_heuristic = 0.0
 	update_cost_display()
 
 func _process(delta):
@@ -40,6 +44,14 @@ func _process(delta):
 				total_cost += world.tile_cost[current_tile]
 			update_cost_display()			
 			update_surrounding_tile_costs(tile_position)
+			
+			var start = tile_position
+			var end = world.libro_position
+			
+			var manhattan_distance = abs(end.x - start.x) + abs(end.y - start.y)
+			total_heuristic += manhattan_distance
+			heuristic_label.text = "Distancia : %.2f" % manhattan_distance
+			total_h.text = "Heurística total : %.2f" % total_heuristic
 			current_target_index += 1
 	else:
 		velocity = Vector2.ZERO

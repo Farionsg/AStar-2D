@@ -33,12 +33,23 @@ var tile_cost = {
 var rooms = []
 var corridors = []
 var libro_position = Vector2i.ZERO
+var pausa = false
 
 func _ready():
+	get_tree().paused = false
 	generate_map()
 	generate_astar_graph()
 	spawn_book_in_random_room()
 	player.move_to_book()
+
+func _process(delta):
+		if Input.is_action_just_pressed("escape"):
+			if !pausa:
+				$CharacterBody2D/Esc/VBoxContainer/Button.show()
+				$CharacterBody2D/Esc/VBoxContainer/Button2.show()
+				$CharacterBody2D/Esc/VBoxContainer/Button3.show()
+				pausa = true
+				get_tree().paused = true				
 
 func generate_map():
 	# Generar cuartos y pasillos
@@ -116,7 +127,7 @@ func place_room(room):
 			var tile_y = room.position.y + y
 			
 			var floor_tiles = [TILE_FLOOR, TILE_MUD, TILE_GRASS, TILE_WATER]
-			var probabilities = [0.5, 0.3, 0.15, 0.05]
+			var probabilities = [0.5, 0.3, 0.10, 0.10]
 			var tile_type = choose_random_tile(floor_tiles, probabilities)
 			# Colocar piso
 			tilemap.set_cell(Vector2i(tile_x, tile_y), tile_type, tile_atlas_cords)
@@ -194,3 +205,19 @@ func place_random_objects(room):
 func get_random_object_scene():
 	var objects = [ SillaScene, PupitreScene ]
 	return objects[randi() % objects.size()]
+
+
+func _on_reiniciar_pressed() -> void:
+	get_tree().reload_current_scene()
+
+
+func _on_exit_pressed() -> void:
+	get_tree().quit()
+
+
+func _on_continuar_pressed() -> void:
+	$CharacterBody2D/Esc/VBoxContainer/Button.hide()
+	$CharacterBody2D/Esc/VBoxContainer/Button2.hide()
+	$CharacterBody2D/Esc/VBoxContainer/Button3.hide()
+	pausa = false
+	get_tree().paused = false

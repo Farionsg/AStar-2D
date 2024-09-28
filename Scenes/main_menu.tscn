@@ -1,0 +1,124 @@
+[gd_scene load_steps=9 format=3 uid="uid://df5b6np04fg60"]
+
+[ext_resource type="Texture2D" uid="uid://bh4p2mqb0e166" path="res://Assets/UI/WhatsApp Image 2024-09-28 at 13.44.21_15b3cac6.jpg" id="1_bjsct"]
+[ext_resource type="Script" path="res://Scenes/main_menu.gd" id="1_clxni"]
+[ext_resource type="FontFile" uid="uid://dp5qnid1khkuv" path="res://Assets/UI/GrapeSoda.ttf" id="2_gp1w6"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bwkaw"]
+texture = ExtResource("1_bjsct")
+modulate_color = Color(0.366595, 0.366595, 0.366595, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y0gt8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p7gyi"]
+bg_color = Color(0.629675, 0.629675, 0.629675, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wefo4"]
+bg_color = Color(0.158472, 0.158472, 0.158472, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yf1um"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_clxni")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_bwkaw")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -212.0
+offset_top = -18.0
+offset_right = 212.0
+offset_bottom = 237.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 35
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxEmpty_y0gt8")
+theme_override_styles/hover = SubResource("StyleBoxFlat_p7gyi")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_wefo4")
+theme_override_styles/normal = SubResource("StyleBoxFlat_yf1um")
+text = "Iniciar"
+
+[node name="Button2" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxEmpty_y0gt8")
+theme_override_styles/hover = SubResource("StyleBoxFlat_p7gyi")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_wefo4")
+theme_override_styles/normal = SubResource("StyleBoxFlat_yf1um")
+text = "Exit
+"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -349.0
+offset_top = -416.0
+offset_right = 349.0
+offset_bottom = -135.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 10
+theme_override_fonts/font = ExtResource("2_gp1w6")
+theme_override_font_sizes/font_size = 120
+text = "SCHOOL ASTAR
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_exit_2_pressed"]

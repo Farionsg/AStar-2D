@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=3 uid="uid://oti2iflldpe4"]
+[gd_scene load_steps=62 format=3 uid="uid://oti2iflldpe4"]
 
 [ext_resource type="Script" path="res://Scenes/player.gd" id="1_b2tdb"]
 [ext_resource type="Texture2D" uid="uid://7wlc3ify21bn" path="res://Assets/Player/idle.png" id="1_hcc5n"]
@@ -402,6 +402,12 @@ font_size = 11
 [sub_resource type="LabelSettings" id="LabelSettings_0t5h1"]
 font_size = 11
 
+[sub_resource type="LabelSettings" id="LabelSettings_4nawr"]
+font_size = 11
+
+[sub_resource type="LabelSettings" id="LabelSettings_6n8sa"]
+font_size = 11
+
 [node name="CharacterBody2D" type="CharacterBody2D"]
 scale = Vector2(2, 2)
 script = ExtResource("1_b2tdb")
@@ -421,9 +427,9 @@ zoom = Vector2(0.8, 0.8)
 script = ExtResource("4_bvunr")
 
 [node name="CostLabel" type="Label" parent="Camera2D"]
-offset_left = 170.0
+offset_left = 150.0
 offset_top = -161.5
-offset_right = 271.0
+offset_right = 251.0
 offset_bottom = -123.5
 label_settings = SubResource("LabelSettings_1mgjf")
 
@@ -454,3 +460,18 @@ offset_top = -125.5
 offset_right = -243.5
 offset_bottom = -102.5
 label_settings = SubResource("LabelSettings_0t5h1")
+
+[node name="HeuristicLabel" type="Label" parent="Camera2D"]
+offset_left = 150.0
+offset_top = -149.5
+offset_right = 190.0
+offset_bottom = -126.5
+label_settings = SubResource("LabelSettings_4nawr")
+horizontal_alignment = 2
+
+[node name="TotalH" type="Label" parent="Camera2D"]
+offset_left = 150.0
+offset_top = -137.5
+offset_right = 190.0
+offset_bottom = -114.5
+label_settings = SubResource("LabelSettings_6n8sa")
