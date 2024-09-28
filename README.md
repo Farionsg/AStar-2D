@@ -22,6 +22,7 @@ This project was made in and for 4.3 Stable. I don't assure you that i'll work o
 Just download the repo from here and open the AStar.exe file. The game has near to zero user input.
 Once the game starts just hit Start to watch the simulation. At anytime you can hit the 'esc' key on your keyboard to bring up options.
 Every iteration of the game will be different as its all procedurally generated. 
+
 It may contain certain bugs such as:
 - The book spawning in a wall.
 - The player spawning in the book.
