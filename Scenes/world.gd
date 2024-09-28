@@ -14,13 +14,25 @@ var PupitreScene = load("res://Scenes/pupitre.tscn")
 var LibroScene = load("res://Scenes/libro.tscn")
 
 # Estas son el indice de la textura que queremos usar para el tilemap
-const TILE_FLOOR = 2
+var TILE_FLOOR = 2
+const TILE_WATER = 4
+const TILE_GRASS = 5
+const TILE_MUD = 6
 const TILE_WALL = 3
+
+var tile_atlas_cords = Vector2.ZERO
+
+var tile_cost = {
+	TILE_FLOOR : 1.0,
+	TILE_MUD   : 2.0,
+	TILE_GRASS : 3.0,
+	TILE_WATER : 4.0
+	}
 
 # Guarda el mapa en arreglos
 var rooms = []
 var corridors = []
-var libro_position = Vector2.ZERO
+var libro_position = Vector2i.ZERO
 
 func _ready():
 	generate_map()
@@ -60,16 +72,18 @@ func generate_astar_graph():
 	for x in range(MAP_WIDTH):
 		for y in range(MAP_HEIGHT): # Le damos el rango del mapa que va a buscar
 			var tile_type = tilemap.get_cell_source_id(Vector2(x, y)) # Esto es para saber que tile es piso
-			if tile_type == TILE_FLOOR:								  # Y CUAL ES PARED
+			if tile_type in tile_cost:								  # Y CUAL ES PARED
 				var id = x + y * MAP_WIDTH   		 # Como si es piso entonces entra y
-				astar.add_point(id, Vector2(x, y))	 # Se crea una id de la tile para agregarla al path			
+				var position = Vector2(x, y)
+				var weight_scale = tile_cost[tile_type]
+				astar.add_point(id, position, weight_scale)	 # Se crea una id de la tile para agregarla al path			
 				# Conectar solo con los puntos vecinos en las direcciones cardinales
 				for dir in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]: # Esto de vector es para no dar diagonales
 					var neighbor_x = x + dir.x	# Define las direcciones de los vecinos arriba y al lado
 					var neighbor_y = y + dir.y  # Para saber si son piso y poder agregarlo al mapa
 					if neighbor_x >= 0 and neighbor_x < MAP_WIDTH and neighbor_y >= 0 and neighbor_y < MAP_HEIGHT: # QUE NO SE SALGA DEL MAPA
 						var neighbor_tile = tilemap.get_cell_source_id(Vector2(neighbor_x, neighbor_y)) # Hace lo mismo de saber si es piso o pared
-						if neighbor_tile == TILE_FLOOR:
+						if neighbor_tile in tile_cost:
 							var neighbor_id = neighbor_x + neighbor_y * MAP_WIDTH
 							astar.connect_points(id, neighbor_id)  # Si es piso lo conecta mucho gusto
 	## ------AHORA TENEMOS TODO EL MAPA EN NODOS -> player.gd move_to_book() PARA SABER COMO HACE EL PATH-----------------
@@ -101,8 +115,11 @@ func place_room(room):
 			var tile_x = room.position.x + x
 			var tile_y = room.position.y + y
 			
+			var floor_tiles = [TILE_FLOOR, TILE_MUD, TILE_GRASS, TILE_WATER]
+			var probabilities = [0.5, 0.3, 0.15, 0.05]
+			var tile_type = choose_random_tile(floor_tiles, probabilities)
 			# Colocar piso
-			tilemap.set_cell(Vector2i(tile_x, tile_y), TILE_FLOOR, Vector2i(2,0))
+			tilemap.set_cell(Vector2i(tile_x, tile_y), tile_type, tile_atlas_cords)
 	
 	# Colocar paredes alrededor del cuarto
 	for x in range(room.size.x + 2):
@@ -112,6 +129,25 @@ func place_room(room):
 	for y in range(room.size.y + 2):
 		tilemap.set_cell(Vector2i(room.position.x - 1, room.position.y + y - 1), TILE_WALL, Vector2i(0,3))
 		tilemap.set_cell(Vector2i(room.position.x + room.size.x, room.position.y + y - 1), TILE_WALL, Vector2i(0,3))
+
+func choose_random_tile(tiles, probabilities):
+	var rand = randf()
+	var cumulative = 0.0
+	for i in range(tiles.size()):
+		cumulative += probabilities[i]
+		if rand < cumulative:
+			match i:
+				1:
+					tile_atlas_cords = Vector2i(2,0)
+				2:
+					tile_atlas_cords = Vector2i(1,4)
+				3:
+					tile_atlas_cords = Vector2i(1,3)
+				4:
+					tile_atlas_cords = Vector2i(0,4)
+			return tiles[i]
+	tile_atlas_cords = Vector2i(2,0)
+	return tiles[tiles.size() - 1]
 
 func connect_rooms():
 	# Conectar los cuartos con pasillos

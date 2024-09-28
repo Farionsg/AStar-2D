@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://c8kwvkc0pyho2"]
+[gd_scene load_steps=4 format=3 uid="uid://c8kwvkc0pyho2"]
 
 [ext_resource type="Script" path="res://Scenes/world.gd" id="1_mldty"]
 [ext_resource type="PackedScene" uid="uid://cmfb11j1xnces" path="res://Scenes/tile_map.tscn" id="2_4nm8w"]
-[ext_resource type="Script" path="res://Scenes/camera_2d.gd" id="3_aublt"]
 [ext_resource type="PackedScene" uid="uid://oti2iflldpe4" path="res://Scenes/Player.tscn" id="4_ou168"]
 
 [node name="World" type="Node2D"]
@@ -10,11 +9,6 @@ script = ExtResource("1_mldty")
 
 [node name="TileMap" parent="." instance=ExtResource("2_4nm8w")]
 unique_name_in_owner = true
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(972, 1079)
-zoom = Vector2(0.8, 0.8)
-script = ExtResource("3_aublt")
 
 [node name="CharacterBody2D" parent="." instance=ExtResource("4_ou168")]
 position = Vector2(930, 461)

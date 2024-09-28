@@ -1,8 +1,9 @@
-[gd_scene load_steps=54 format=3 uid="uid://oti2iflldpe4"]
+[gd_scene load_steps=60 format=3 uid="uid://oti2iflldpe4"]
 
 [ext_resource type="Script" path="res://Scenes/player.gd" id="1_b2tdb"]
 [ext_resource type="Texture2D" uid="uid://7wlc3ify21bn" path="res://Assets/Player/idle.png" id="1_hcc5n"]
 [ext_resource type="Texture2D" uid="uid://ds2sd62i2c36a" path="res://Assets/Player/walk.png" id="2_n8cjy"]
+[ext_resource type="Script" path="res://Scenes/camera_2d.gd" id="4_bvunr"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pgjvk"]
 atlas = ExtResource("2_n8cjy")
@@ -386,6 +387,21 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uyoj2"]
 size = Vector2(7, 10.5)
 
+[sub_resource type="LabelSettings" id="LabelSettings_1mgjf"]
+font_size = 11
+
+[sub_resource type="LabelSettings" id="LabelSettings_j2h88"]
+font_size = 11
+
+[sub_resource type="LabelSettings" id="LabelSettings_acy60"]
+font_size = 11
+
+[sub_resource type="LabelSettings" id="LabelSettings_gnnr0"]
+font_size = 11
+
+[sub_resource type="LabelSettings" id="LabelSettings_0t5h1"]
+font_size = 11
+
 [node name="CharacterBody2D" type="CharacterBody2D"]
 scale = Vector2(2, 2)
 script = ExtResource("1_b2tdb")
@@ -399,3 +415,42 @@ frame_progress = 0.938947
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 1.75)
 shape = SubResource("RectangleShape2D_uyoj2")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.8, 0.8)
+script = ExtResource("4_bvunr")
+
+[node name="CostLabel" type="Label" parent="Camera2D"]
+offset_left = 170.0
+offset_top = -161.5
+offset_right = 271.0
+offset_bottom = -123.5
+label_settings = SubResource("LabelSettings_1mgjf")
+
+[node name="UpCostLabel" type="Label" parent="Camera2D"]
+offset_left = -283.5
+offset_top = -161.5
+offset_right = -243.5
+offset_bottom = -138.5
+label_settings = SubResource("LabelSettings_j2h88")
+
+[node name="DownCostLabel" type="Label" parent="Camera2D"]
+offset_left = -283.5
+offset_top = -149.5
+offset_right = -243.5
+offset_bottom = -126.5
+label_settings = SubResource("LabelSettings_acy60")
+
+[node name="LeftCostLabel" type="Label" parent="Camera2D"]
+offset_left = -283.5
+offset_top = -137.5
+offset_right = -243.5
+offset_bottom = -114.5
+label_settings = SubResource("LabelSettings_gnnr0")
+
+[node name="RightCostLabel" type="Label" parent="Camera2D"]
+offset_left = -283.5
+offset_top = -125.5
+offset_right = -243.5
+offset_bottom = -102.5
+label_settings = SubResource("LabelSettings_0t5h1")
