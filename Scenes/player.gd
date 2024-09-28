@@ -9,6 +9,8 @@ extends CharacterBody2D
 
 var idle = 0 # La use para saber en que direccion poner la idle animation
 var satanas = Vector2.ZERO # La quiero usar para mostrar las animaciones de movimiento correctas
+var ejeX = 0
+var ejeY = 0
 
 # Aqui guarda el camino que seguira en el A*
 var path = []
@@ -18,56 +20,32 @@ func _process(delta):
 	## Lo que necesita para moverse solo hacia el objetivo owo
 	if path.size() > 0 and current_target_index < path.size():
 		var target = world.tilemap.map_to_local(path[current_target_index])
-		var direction = (target - global_position).normalized()		
+		var direction = (target - global_position).normalized()
 		velocity = direction * speed
 		move_and_slide()
-		satanas += global_position				
+		animar(direction)		
 		if global_position.distance_to(target) < 5:
 			current_target_index += 1
 	else:
 		velocity = Vector2.ZERO
 		move_and_slide()
-	
-	
-	## Movimiento del jugador con input de teclado
-	#var direction = Vector2.ZERO
-	#if Input.is_action_pressed("Right"):
-		#direction.x += 1
-	#if Input.is_action_pressed("Left"):
-		#direction.x -= 1
-	#if Input.is_action_pressed("Down"):
-		#direction.y += 1
-	#if Input.is_action_pressed("Up"):
-		#direction.y -= 1
-#
-	## Mover al jugador en la dirección indicada con una velocidad constante
-	#velocity = direction.normalized() * speed
-	#move_and_slide()
-	#
-	#if direction.x != 0 or direction.y != 0:
-		#animated_sprite.play()
-		#if direction.x > 0:
-			#animated_sprite.animation = "WalkR"
-			#idle = 0
-		#elif direction.x < 0:
-			#animated_sprite.animation = "WalkL"
-			#idle = 1
-		#elif direction.y > 0:
-			#animated_sprite.animation = "WalkD"
-			#idle = 2
-		#elif direction.y < 0:
-			#animated_sprite.animation = "WalkU"
-			#idle = 3
-	#else:
-		#match idle:
-			#0:
-				#animated_sprite.animation = "idleRight"
-			#1:
-				#animated_sprite.animation = "idleLeft"
-			#2:
-				#animated_sprite.animation = "idleDown"
-			#3:
-				#animated_sprite.animation = "idleUp"
+		animated_sprite.animation = "idleDown"
+		
+func animar(direction: Vector2):
+	animated_sprite.play()
+	if direction.x == ejeX:		
+		if direction.x > 0:
+			animated_sprite.animation = "WalkR"
+		elif direction.x < 0:
+			animated_sprite.animation = "WalkL"
+	if direction.y == ejeY:
+		if direction.y > 0:
+			animated_sprite.animation = "WalkD"
+		elif direction.y < 0:
+			animated_sprite.animation = "WalkU"
+	ejeX = direction.x
+	ejeY = direction.y
+
 				
 func move_to_book():
 	# Obtener posición actual del jugador
