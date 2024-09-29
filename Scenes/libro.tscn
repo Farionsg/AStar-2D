@@ -1,11 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://bd2djkn02rxy2"]
+[gd_scene load_steps=5 format=3 uid="uid://bd2djkn02rxy2"]
 
+[ext_resource type="Script" path="res://Scenes/libro.gd" id="1_q55hj"]
 [ext_resource type="Texture2D" uid="uid://drani2vys58ln" path="res://Assets/Tilemap/CoolSchool_tileset.png" id="1_xvl1u"]
+[ext_resource type="FontFile" uid="uid://dp5qnid1khkuv" path="res://Assets/UI/GrapeSoda.ttf" id="3_4pjht"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yax47"]
-size = Vector2(27, 23)
+size = Vector2(13.5, 11.5)
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource("1_q55hj")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_xvl1u")
@@ -18,3 +21,28 @@ region_rect = Rect2(199.253, 551.209, 29.4789, 23.3456)
 position = Vector2(-0.5, 0.5)
 scale = Vector2(2, 2)
 shape = SubResource("RectangleShape2D_yax47")
+
+[node name="Label" type="Label" parent="."]
+visible = false
+z_index = 4
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -470.0
+offset_top = -413.0
+offset_right = 460.0
+offset_bottom = -132.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 10
+theme_override_fonts/font = ExtResource("3_4pjht")
+theme_override_font_sizes/font_size = 120
+text = "Objetivo Alcanzado!!!!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="area_entered" from="Sprite2D/Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="body_entered" from="Sprite2D/Area2D" to="." method="_on_area_2d_body_entered"]
